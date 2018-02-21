@@ -1,0 +1,5 @@
+.idea
+.gitlab
+target
+.DS_Store
+.scalafmt.conf

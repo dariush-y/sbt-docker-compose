@@ -1,0 +1,13 @@
+version: '3'
+services:
+  canary:
+    image: "docker.knoopje.com/veon/canary:latest"
+    healthcheck:
+      interval: 1s
+      retries: 30
+    environment:
+      PROM_REFRESH_INTERVAL: 10 second
+      ROOT_LOG_LEVEL: debug
+    ports:
+      - "8731"
+      - "9015"
