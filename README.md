@@ -25,7 +25,7 @@ On the contrary `sbt-docker-compose` plugin is using tasks, exposes docker compo
 
 1 - Add the `sbt-docker-compose` plugin to the plugins.sbt file:
 ```scala
-addSbtPlugin("com.ehsanyou" % "sbt-docker-compose" % "1.0.0")
+addSbtPlugin("com.github.ehsanyou" % "sbt-docker-compose" % "1.0.0")
 ```
 2 - Enable the auto-plugin on your desired sbt project:
 ```scala

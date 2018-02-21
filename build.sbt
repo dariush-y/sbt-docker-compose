@@ -1,6 +1,6 @@
 name := "sbt-docker-compose"
 
-organization in ThisBuild := "com.ehsanyou"
+organization in ThisBuild := "com.github.ehsanyou"
 scalaVersion in ThisBuild := "2.10.6"
 
 lazy val baseDependencies = Seq(
