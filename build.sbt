@@ -5,7 +5,7 @@ organization in ThisBuild := "com.github.ehsanyou"
 version := "1.0.0"
 scalaVersion in ThisBuild := "2.10.6"
 
-val publishSetting = Seq(
+lazy val publishSetting = Seq(
   publishTo := {
     val nexus = "https://oss.sonatype.org"
     if (isSnapshot.value)
