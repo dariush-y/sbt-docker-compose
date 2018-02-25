@@ -6,6 +6,7 @@ import sbt.Def
 import sbt._
 
 import scala.concurrent.Future
+import scala.sys.process.Process
 
 package object helpers {
 

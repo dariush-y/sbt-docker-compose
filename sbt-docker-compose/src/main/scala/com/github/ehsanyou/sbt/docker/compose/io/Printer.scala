@@ -81,7 +81,7 @@ final case class Printer(
       else {
         stringStyle match {
           case StringStyle.DoubleQuoted => '"'
-          case StringStyle.SingleQuoted => '''
+          case StringStyle.SingleQuoted => '\''
           case StringStyle.Folded => '>'
           case StringStyle.Literal => '|'
           case StringStyle.Plain => null

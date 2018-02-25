@@ -14,8 +14,7 @@ import com.github.ehsanyou.sbt.docker.compose.helpers._
 import com.github.ehsanyou.sbt.docker.compose.runner.DockerComposeRunner
 import com.github.ehsanyou.sbt.docker.compose.runner.DockerComposeTestRunner
 import sbt.Keys._
-import sbt.Def
-import sbt._
+import sbt.{Def, _}
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._
@@ -72,8 +71,7 @@ object DockerCompose extends AutoPlugin {
     val ac: ActorSystem = ActorSystem(s"sbt-docker-compose-${UUID.randomUUID()}", ConfigFactory.load(cl), cl)
 
     scala.sys.addShutdownHook {
-      ac.shutdown()
-      ac.awaitTermination()
+      ac.terminate()
     }
 
     ac
@@ -87,16 +85,16 @@ object DockerCompose extends AutoPlugin {
     Seq.empty[(String, String)]
   }
 
-  lazy val dockerComposeDownCommandOptionsImpl = Def.task {
+  lazy val dockerComposeDownCommandOptionsImpl: Def.Initialize[DockerComposeDownCmd] = Def.setting {
     DockerComposeDownCmd()
   }
 
-  lazy val dockerComposeCommandOptionsImpl: Def.Initialize[Task[DockerComposeCmd]] = Def.task {
+  lazy val dockerComposeCommandOptionsImpl: Def.Initialize[DockerComposeCmd] = Def.setting {
     DockerComposeCmd()
       .withOption(DockerComposeOption("-p", dockerComposeProjectName.value))
   }
 
-  lazy val dockerComposeUpCommandOptionsImpl: Def.Initialize[Task[DockerComposeUpCmd]] = Def.task {
+  lazy val dockerComposeUpCommandOptionsImpl: Def.Initialize[DockerComposeUpCmd] = Def.setting {
     DockerComposeUpCmd()
   }
 
@@ -109,19 +107,11 @@ object DockerCompose extends AutoPlugin {
     basePath + "/docker-compose.yml"
   }
 
-  lazy val dcPreconfiguredCommands: Def.Initialize[Task[Seq[commands.Command]]] = Def.task {
-    Seq(
-      dockerComposeCommandOptions.value,
-      dockerComposeDownCommandOptions.value,
-      dockerComposeUpCommandOptions.value
-    )
-  }
-
   lazy val dockerComposeTestDummyImpl: Def.Initialize[Task[Unit]] = Def.task(())
 
-  lazy val dockerComposeHealthCheckDeadlineImpl: Def.Initialize[Task[FiniteDuration]] = Def task 5.minutes
+  lazy val dockerComposeHealthCheckDeadlineImpl: Def.Initialize[FiniteDuration] = Def setting 5.minutes
 
-  lazy val dockerComposeTestCommandOptionsImpl: Def.Initialize[Task[DockerComposeTestCmd]] = Def.task {
+  lazy val dockerComposeTestCommandOptionsImpl: Def.Initialize[DockerComposeTestCmd] = Def.setting {
     DockerComposeTestCmd(commands.test.DockerComposeTest.Test)
   }
 
@@ -132,6 +122,11 @@ object DockerCompose extends AutoPlugin {
     if (!dockerComposeIgnore.value) {
 
       implicit val cwd: Cwd = Cwd(baseDirectory.value)
+      val preConfiguredCommands = Seq(
+        dockerComposeCommandOptions.value,
+        dockerComposeDownCommandOptions.value,
+        dockerComposeUpCommandOptions.value
+      )
 
       Await.result(
         new DockerComposeRunner(
@@ -139,7 +134,7 @@ object DockerCompose extends AutoPlugin {
             .fallback(dockerComposeCommandOptions.value)
             .withComposeFiles(dockerComposeFilePath.value),
           command,
-          dcPreconfiguredCommands.value,
+          preConfiguredCommands,
           dockerComposeProjectName.value,
           dockerComposeFilePath.value,
           dockerComposeTags.value,
