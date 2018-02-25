@@ -57,15 +57,9 @@ def akkaActor(scalaVersion: String) = scalaVersion match {
     "com.typesafe.akka" %% "akka-actor" % "2.5.10"
 }
 
-def circeYaml(scalaVersion: String) = scalaVersion match {
-  case "2.10.6" =>
-    "io.circe" % "circe-yaml_2.10" % "0.6.1" exclude("org.spire-math", "jawn-parser_2.10")
-  case _ =>
-    "io.circe" % "circe-yaml_2.12" % "0.6.1" exclude("org.spire-math", "jawn-parser_2.12")
-}
-
 lazy val baseDependencies = Seq(
   "com.spotify" % "docker-client" % "8.9.0",
+  "io.circe" %% "circe-yaml" % "0.6.1",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
@@ -78,7 +72,6 @@ lazy val `sbt-docker-compose` = (project in file("."))
       val sv = appConfiguration.value.provider.id.version
       ("org.scala-sbt" % "compiler-interface" % sv % "component").sources
     },
-    libraryDependencies += circeYaml(scalaVersion.value),
     libraryDependencies ++= baseDependencies :+ akkaActor(scalaVersion.value)
   )
   .settings(publishSetting: _*)

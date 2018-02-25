@@ -71,7 +71,8 @@ object DockerCompose extends AutoPlugin {
     val ac: ActorSystem = ActorSystem(s"sbt-docker-compose-${UUID.randomUUID()}", ConfigFactory.load(cl), cl)
 
     scala.sys.addShutdownHook {
-      ac.terminate()
+      ac.shutdown()
+      ac.awaitTermination()
     }
 
     ac
