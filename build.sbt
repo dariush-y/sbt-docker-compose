@@ -3,7 +3,6 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 name := "sbt-docker-compose"
 organization in ThisBuild := "com.github.ehsanyou"
 version := "1.0.0"
-scalaVersion in ThisBuild := "2.10.6"
 
 lazy val publishSetting = Seq(
   publishTo := {
@@ -51,28 +50,35 @@ lazy val publishSetting = Seq(
   }
 )
 
+def akkaActor(scalaVersion: String) = scalaVersion match {
+  case "2.10.6" =>
+    "com.typesafe.akka" %% "akka-actor" % "2.3.16"
+  case _ =>
+    "com.typesafe.akka" %% "akka-actor" % "2.5.10"
+}
+
+def circeYaml(scalaVersion: String) = scalaVersion match {
+  case "2.10.6" =>
+    "io.circe" % "circe-yaml_2.10" % "0.6.1" exclude("org.spire-math", "jawn-parser_2.10")
+  case _ =>
+    "io.circe" % "circe-yaml_2.12" % "0.6.1" exclude("org.spire-math", "jawn-parser_2.12")
+}
+
 lazy val baseDependencies = Seq(
   "com.spotify" % "docker-client" % "8.9.0",
-  "io.circe" %% "circe-yaml" % "0.6.1",
-  "com.typesafe.akka" %% "akka-actor" % "2.5.10",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
-lazy val `sbt-docker-compose` = project
+lazy val `sbt-docker-compose` = (project in file("."))
   .settings(
     sbtPlugin := true,
     scalaVersion := "2.12.3",
-    sbtVersion in Global := "1.0.2",
+    crossSbtVersions := Vector("0.13.16", "1.0.0"),
     scalaCompilerBridgeSource := {
       val sv = appConfiguration.value.provider.id.version
       ("org.scala-sbt" % "compiler-interface" % sv % "component").sources
     },
-    libraryDependencies ++= baseDependencies
+    libraryDependencies += circeYaml(scalaVersion.value),
+    libraryDependencies ++= baseDependencies :+ akkaActor(scalaVersion.value)
   )
   .settings(publishSetting: _*)
-
-lazy val root = (project in file("."))
-  .settings(publishArtifact := false)
-  .aggregate(
-    `sbt-docker-compose`
-  )
