@@ -72,7 +72,7 @@ lazy val baseDependencies = Seq(
 lazy val `sbt-docker-compose` = (project in file("."))
   .settings(
     sbtPlugin := true,
-    scalaVersion := "2.12.3",
+    scalaVersion := "2.10.6",
     crossSbtVersions := Vector("0.13.16", "1.0.0"),
     scalaCompilerBridgeSource := {
       val sv = appConfiguration.value.provider.id.version
