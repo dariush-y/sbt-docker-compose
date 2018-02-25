@@ -69,6 +69,7 @@ lazy val `sbt-docker-compose` = project
     },
     libraryDependencies ++= baseDependencies
   )
+  .settings(publishSetting: _*)
 
 lazy val root = (project in file("."))
   .settings(publishArtifact := false)
