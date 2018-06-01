@@ -23,8 +23,10 @@ object SystemPropertyProvider {
       (s"${normalizedName}_${mapping.privatePort}", s"$hostName:${mapping.publicPort}") ::
         (s"${normalizedName}_${mapping.privatePort}_host", s"$hostName") ::
         (s"${normalizedName}_${mapping.privatePort}_port", s"${mapping.publicPort}") ::
+        (s"${normalizedName}_${mapping.privatePort}_id", container.id) ::
         (s"${serviceName}_host", s"$hostName") ::
         (s"${serviceName}_port", s"${mapping.publicPort}") ::
+        (s"${serviceName}_id", container.id) ::
         (s"$serviceName", s"$hostName:${mapping.publicPort}") ::
         Nil
     }
