@@ -9,7 +9,7 @@ trait Command {
 
   def name: String
 
-  def build: String
+  def build: Seq[String]
 
   def isEmpty: Boolean
 
@@ -17,7 +17,7 @@ trait Command {
 
   def hasEmptyOption: Boolean
 
-  def combine(cmd: Command): String = this.build + " " + cmd.build
+  def combine(cmd: Command): Seq[String] = this.build ++ cmd.build
 
   def withOption(option: DockerComposeOption): CommandType = appendOption(option)
 
@@ -37,14 +37,12 @@ trait Command {
 
 object Command {
 
-  def asString(name: String, args: Seq[DockerComposeOption]*)(optionsToOmit: String*): String = {
-    val flatArgs = args.flatten.filterNot(opt => optionsToOmit.exists(_ == opt.key))
+  def asStringSeq(name: String, args: Seq[DockerComposeOption]*)(optionsToOmit: String*): Seq[String] = {
+    val flatArgs = args.flatten.filterNot(arg => optionsToOmit.contains(arg.key))
     if (flatArgs.isEmpty) {
-      name
-    } else name + whiteSpace + flatArgs.map(_.toString).mkString(whiteSpace)
+      Seq(name)
+    } else Seq(name) ++ flatArgs.flatMap(_.asStringSeq)
   }
-
-  private val whiteSpace = " "
 
 }
 

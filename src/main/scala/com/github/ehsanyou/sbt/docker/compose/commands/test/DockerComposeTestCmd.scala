@@ -11,7 +11,7 @@ case class DockerComposeTestCmd(underlying: DockerComposeTest) extends Command {
   override val name: String = "up"
   override val isEmpty: Boolean = underlying.options.isEmpty && underlying.services.isEmpty && underlying.tags.isEmpty
 
-  override def build: String = Command.asString(name, underlying.options, underlying.services)()
+  override def build: Seq[String] = Command.asStringSeq(name, underlying.options, underlying.services)()
 
   override def hasEmptyOption: Boolean = underlying.options.isEmpty
 

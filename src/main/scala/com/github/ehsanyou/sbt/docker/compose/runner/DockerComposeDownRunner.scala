@@ -21,7 +21,7 @@ class DockerComposeDownRunner(
   override def run: Future[Def.Initialize[Task[Unit]]] =
     process(command)(sbtFutureTask.empty)
 
-  private val command: String =
+  private val command: Seq[String] =
     if (dockerComposeDownCmd.hasEmptyOption) {
       dockerComposeCmd.withProjectName(projectDockerComposeOption) combine dockerComposeDownCmd.copy(
         dockerComposeDownCmd.underlying.copy(options = preConfiguredDockerComposeDownCmd.underlying.options)

@@ -16,9 +16,9 @@ object DataTypes {
   }
 
   case class DockerComposeOption(key: String, value: Option[String]) {
-    override def toString: String = value match {
-      case Some(v) => s"$key $v"
-      case None => s"$key"
+    def asStringSeq: Seq[String] = value match {
+      case Some(v) => Seq(key, v)
+      case _ => Seq(key)
     }
   }
   object DockerComposeOption {

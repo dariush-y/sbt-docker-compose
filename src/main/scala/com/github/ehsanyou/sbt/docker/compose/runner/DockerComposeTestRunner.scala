@@ -46,7 +46,7 @@ class DockerComposeTestRunner(
   override def run: Future[Def.Initialize[Task[Unit]]] =
     process(command) {
 
-      if (consoleLoggerEnabled) processNonBlocking(s"docker-compose $projectName logs -f --tail=all")
+      if (consoleLoggerEnabled) processNonBlocking(Seq("docker-compose") ++ projectName.asStringSeq ++ Seq("logs", "-f", "--tail=all"))
 
       SystemPropertyProvider(dockerClient.containers)
 
@@ -129,10 +129,10 @@ class DockerComposeTestRunner(
 
   private def dockerComposeDown =
     process(
-      s"docker-compose $projectName -f $dockerComposeFilePath down --remove-orphans"
+      Seq("docker-compose")  ++ projectName.asStringSeq ++ Seq("-f", dockerComposeFilePath, "down", "--remove-orphans")
     )(())
 
-  private val command: String = {
+  private val command: Seq[String] = {
 
     lazy val cmd: DockerComposeCmd = TagSubstitutor(
       dockerComposeCmd = dockerComposeCommand,
