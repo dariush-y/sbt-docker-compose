@@ -23,7 +23,7 @@ def akkaActor(scalaVersion: String) = CrossVersion.partialVersion(scalaVersion) 
 }
 
 libraryDependencies ++= Seq(
-  "com.spotify" % "docker-client" % "8.9.0",
+  "com.spotify" % "docker-client" % "8.11.7",
   "io.circe" %% "circe-yaml" % "0.6.1",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   akkaActor(scalaVersion.value)
