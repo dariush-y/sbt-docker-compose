@@ -177,7 +177,7 @@ On multi-project config with too many projects is better to limit concurrency le
 
 ```scala
 concurrentRestrictions in Global := Seq(
-  Tags.limit(DockerComposeTest, 3)
+  Tags.limit(DockerComposeTestTag, 3)
 )
 ```
 
