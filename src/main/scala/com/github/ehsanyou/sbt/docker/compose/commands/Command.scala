@@ -1,7 +1,6 @@
 package com.github.ehsanyou.sbt.docker.compose.commands
 
-import com.github.ehsanyou.sbt.docker.compose.DataTypes.DockerComposeOption
-import com.github.ehsanyou.sbt.docker.compose.DataTypes.DockerComposeOptionKey
+import com.github.ehsanyou.sbt.docker.compose.DataTypes.{DockerComposeOption, DockerComposeOptionKey, EnvironmentVariable}
 
 trait Command {
 
@@ -10,6 +9,8 @@ trait Command {
   def name: String
 
   def build: String
+
+  def environment: Seq[(String, String)]
 
   def isEmpty: Boolean
 
@@ -27,12 +28,15 @@ trait Command {
 
   def withServices(services: Seq[String]): CommandType = appendServices(services.map(DockerComposeOption.apply))
 
+  def withEnvVar(envVar: (String, String)): CommandType = appendEnvVar(EnvironmentVariable(envVar._1, envVar._2))
+
   def appendOption(option: DockerComposeOption): CommandType
 
   def removeOption(optionKeys: String*): CommandType
 
   def appendServices(services: Seq[DockerComposeOption]): CommandType
 
+  def appendEnvVar(envVar: EnvironmentVariable): CommandType
 }
 
 object Command {

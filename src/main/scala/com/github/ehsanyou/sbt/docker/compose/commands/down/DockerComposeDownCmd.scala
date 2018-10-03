@@ -1,6 +1,6 @@
 package com.github.ehsanyou.sbt.docker.compose.commands.down
 
-import com.github.ehsanyou.sbt.docker.compose.DataTypes.DockerComposeOption
+import com.github.ehsanyou.sbt.docker.compose.DataTypes.{DockerComposeOption, EnvironmentVariable}
 import com.github.ehsanyou.sbt.docker.compose.commands.Command
 
 case class DockerComposeDownCmd(underlying: DockerComposeDown = DockerComposeDown()) extends Command {
@@ -11,6 +11,8 @@ case class DockerComposeDownCmd(underlying: DockerComposeDown = DockerComposeDow
   override val isEmpty: Boolean = underlying.options.isEmpty
 
   override def build: String = Command.asString(name, underlying.options, underlying.services)()
+
+  override def environment: Seq[(String, String)] = Seq.empty
 
   override def hasEmptyOption: Boolean = underlying.options.isEmpty && underlying.services.isEmpty
 
@@ -23,4 +25,6 @@ case class DockerComposeDownCmd(underlying: DockerComposeDown = DockerComposeDow
 
   override def appendServices(services: Seq[DockerComposeOption]): DockerComposeDownCmd =
     copy(underlying.copy(services = underlying.services ++ services))
+
+  override def appendEnvVar(envVar: EnvironmentVariable): CommandType = this
 }

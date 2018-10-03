@@ -19,7 +19,7 @@ class DockerComposeDownRunner(
 ) extends Runner {
 
   override def run: Future[Def.Initialize[Task[Unit]]] =
-    process(command)(sbtFutureTask.empty)
+    process(command)(preConfiguredDockerComposeDownCmd.environment)(sbtFutureTask.empty)
 
   private val command: String =
     if (dockerComposeDownCmd.hasEmptyOption) {

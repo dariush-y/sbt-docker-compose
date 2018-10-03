@@ -26,6 +26,8 @@ object DataTypes {
     def apply(key: String, value: String): DockerComposeOption = apply(key, Some(value))
   }
 
+  case class EnvironmentVariable(key: String, value: String)
+
   sealed trait DockerComposeError {
     def msg: String
   }
