@@ -32,7 +32,7 @@ class DockerComposeUpRunner(
     defaultTags
   )
 
-  private lazy val command: String =
+  private lazy val command: Seq[String] =
     if (dockerComposeUpCmd.hasEmptyOption) {
       dockerComposeCmdWithTagSubstitution.withProjectName(projectName) combine dockerComposeUpCmd.copy(
         dockerComposeUpCmd.underlying.copy(options = preConfiguredDockerComposeUpCmd.underlying.options)

@@ -9,8 +9,8 @@ case class DockerComposeCmd(underlying: DockerCompose = DockerCompose()) extends
 
   override def name: String = "docker-compose"
   override val isEmpty: Boolean = underlying.options.isEmpty
-  override def build: String =
-    Command.asString(name, underlying.options)(DockerCompose.nonNativeOptions.flatMap(_.keys): _*)
+  override def build: Seq[String] =
+    Command.asStringSeq(name, underlying.options)(DockerCompose.nonNativeOptions.flatMap(_.keys): _*)
   override def hasEmptyOption: Boolean = underlying.options.isEmpty
 
   private[compose] def withComposeFiles(

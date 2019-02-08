@@ -26,7 +26,7 @@ package object helpers {
   def yellowPrinter(str: String): Unit = println(scala.Console.YELLOW + str + scala.Console.WHITE)
 
   def process[T](
-    command: String
+    command: Seq[String]
   )(
     onSuccess: => T
   )(
@@ -37,7 +37,7 @@ package object helpers {
   }
 
   def processNonBlocking(
-    command: String
+    command: Seq[String]
   )(
     implicit cwd: Cwd
   ): Process =
