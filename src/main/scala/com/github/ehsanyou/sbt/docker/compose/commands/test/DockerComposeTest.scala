@@ -9,12 +9,13 @@ case class DockerComposeTest(
   options: Seq[DockerComposeOption],
   services: Seq[DockerComposeOption],
   tags: Seq[(String, String)],
-  testType: TestType
+  testType: TestType,
+  envVars: Seq[EnvironmentVariable]
 )
 
 object DockerComposeTest extends CommandCompanion {
 
-  def apply(testType: TestType): DockerComposeTest = DockerComposeTest(Seq.empty, Seq.empty, Seq.empty, testType)
+  def apply(testType: TestType): DockerComposeTest = DockerComposeTest(Seq.empty, Seq.empty, Seq.empty, testType, Seq.empty)
 
   override val options: Seq[DockerComposeOptionKey] = DockerComposeUp.options
 

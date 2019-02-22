@@ -28,11 +28,13 @@ package object helpers {
   def process[T](
     command: String
   )(
+    environment: Seq[(String, String)]
+  )(
     onSuccess: => T
   )(
     implicit cwd: Cwd
   ): T = {
-    if (Process(command, cwd.dir).! == 0) onSuccess
+    if (Process(command, cwd.dir, environment: _*).! == 0) onSuccess
     else throw new InvalidExitCodeException(s"`$command` command returned non-zero exit code.")
   }
 

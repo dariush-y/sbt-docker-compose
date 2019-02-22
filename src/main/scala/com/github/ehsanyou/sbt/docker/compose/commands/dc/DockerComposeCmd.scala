@@ -1,6 +1,6 @@
 package com.github.ehsanyou.sbt.docker.compose.commands.dc
 
-import com.github.ehsanyou.sbt.docker.compose.DataTypes.DockerComposeOption
+import com.github.ehsanyou.sbt.docker.compose.DataTypes.{DockerComposeOption, EnvironmentVariable}
 import com.github.ehsanyou.sbt.docker.compose.commands.Command
 
 case class DockerComposeCmd(underlying: DockerCompose = DockerCompose()) extends Command {
@@ -11,6 +11,7 @@ case class DockerComposeCmd(underlying: DockerCompose = DockerCompose()) extends
   override val isEmpty: Boolean = underlying.options.isEmpty
   override def build: String =
     Command.asString(name, underlying.options)(DockerCompose.nonNativeOptions.flatMap(_.keys): _*)
+  override def environment: Seq[(String, String)] = Seq.empty
   override def hasEmptyOption: Boolean = underlying.options.isEmpty
 
   private[compose] def withComposeFiles(
@@ -39,4 +40,6 @@ case class DockerComposeCmd(underlying: DockerCompose = DockerCompose()) extends
     }
 
   override def appendServices(services: Seq[DockerComposeOption]): DockerComposeCmd = this
+
+  override def appendEnvVar(envVar: EnvironmentVariable): CommandType = this
 }

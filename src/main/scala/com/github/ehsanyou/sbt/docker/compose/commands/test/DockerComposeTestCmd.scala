@@ -1,6 +1,6 @@
 package com.github.ehsanyou.sbt.docker.compose.commands.test
 
-import com.github.ehsanyou.sbt.docker.compose.DataTypes.DockerComposeOption
+import com.github.ehsanyou.sbt.docker.compose.DataTypes.{DockerComposeOption, EnvironmentVariable}
 import com.github.ehsanyou.sbt.docker.compose.commands.Command
 import com.github.ehsanyou.sbt.docker.compose.commands.test.DockerComposeTest._
 
@@ -12,6 +12,8 @@ case class DockerComposeTestCmd(underlying: DockerComposeTest) extends Command {
   override val isEmpty: Boolean = underlying.options.isEmpty && underlying.services.isEmpty && underlying.tags.isEmpty
 
   override def build: String = Command.asString(name, underlying.options, underlying.services)()
+
+  override def environment: Seq[(String, String)] = underlying.envVars.map(e => (e.key, e.value))
 
   override def hasEmptyOption: Boolean = underlying.options.isEmpty
 
@@ -31,6 +33,9 @@ case class DockerComposeTestCmd(underlying: DockerComposeTest) extends Command {
 
   override def appendServices(services: Seq[DockerComposeOption]): DockerComposeTestCmd =
     copy(underlying.copy(services = underlying.services ++ services))
+
+  override def appendEnvVar(envVar: EnvironmentVariable): DockerComposeTestCmd =
+    copy(underlying.copy(envVars = underlying.envVars :+ envVar))
 }
 
 object DockerComposeTestCmd {

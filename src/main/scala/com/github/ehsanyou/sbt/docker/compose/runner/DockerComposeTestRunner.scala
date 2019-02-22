@@ -44,7 +44,7 @@ class DockerComposeTestRunner(
 ) extends Runner {
 
   override def run: Future[Def.Initialize[Task[Unit]]] =
-    process(command) {
+    process(command)(preConfiguredDockerComposeTestCmd.environment) {
 
       if (consoleLoggerEnabled) processNonBlocking(s"docker-compose $projectName logs -f --tail=all")
 
@@ -130,7 +130,7 @@ class DockerComposeTestRunner(
   private def dockerComposeDown =
     process(
       s"docker-compose $projectName -f $dockerComposeFilePath down --remove-orphans"
-    )(())
+    )(Seq.empty)(())
 
   private val command: String = {
 

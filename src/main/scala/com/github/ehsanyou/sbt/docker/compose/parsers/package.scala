@@ -71,7 +71,8 @@ package object parsers extends ParserHelper {
             testType = testType,
             options = options.getOrElse(Seq.empty),
             tags = tags.getOrElse(Seq.empty),
-            services = parsedServices.getOrElse(Seq.empty)
+            services = parsedServices.getOrElse(Seq.empty),
+            envVars = Seq.empty
           )
         )
     }
@@ -97,7 +98,8 @@ package object parsers extends ParserHelper {
         DockerComposeUp(
           options = options.getOrElse(Seq.empty),
           tags = tags.getOrElse(Seq.empty),
-          services = parsedServices.getOrElse(Seq.empty)
+          services = parsedServices.getOrElse(Seq.empty),
+          envVars = Seq.empty
         )
     }
 

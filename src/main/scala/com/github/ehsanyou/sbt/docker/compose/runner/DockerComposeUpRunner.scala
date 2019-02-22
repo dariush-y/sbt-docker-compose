@@ -22,7 +22,7 @@ class DockerComposeUpRunner(
 ) extends Runner {
 
   override def run: Future[Def.Initialize[Task[Unit]]] =
-    process(command)(sbtFutureTask.empty)
+    process(command)(preConfiguredDockerComposeUpCmd.environment)(sbtFutureTask.empty)
 
   lazy val dockerComposeCmdWithTagSubstitution = TagSubstitutor(
     dockerComposeCmd.withProjectName(projectName),

@@ -6,7 +6,8 @@ import com.github.ehsanyou.sbt.docker.compose.commands.CommandCompanion
 case class DockerComposeUp(
   options: Seq[DockerComposeOption],
   services: Seq[DockerComposeOption],
-  tags: Seq[(String, String)]
+  tags: Seq[(String, String)],
+  envVars: Seq[EnvironmentVariable]
 )
 
 object DockerComposeUp extends CommandCompanion {
@@ -28,7 +29,7 @@ object DockerComposeUp extends CommandCompanion {
       ap("--timeout", keyOnly = false) ::
       Nil
 
-  def apply(): DockerComposeUp = DockerComposeUp(Seq.empty, Seq.empty, Seq.empty)
+  def apply(): DockerComposeUp = DockerComposeUp(Seq.empty, Seq.empty, Seq.empty, Seq.empty)
 
   implicit def asCommand(dockerComposeUp: DockerComposeUp): DockerComposeUpCmd =
     DockerComposeUpCmd(dockerComposeUp)
