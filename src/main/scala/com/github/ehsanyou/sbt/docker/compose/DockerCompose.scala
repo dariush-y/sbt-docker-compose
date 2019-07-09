@@ -111,7 +111,7 @@ object DockerCompose extends AutoPlugin {
   }
 
   lazy val dockerComposeOverridesPatternImpl: Def.Initialize[PathFinder] = Def.setting {
-    baseDirectory.value * "docker-compose.overrides.yml"
+    baseDirectory.value * "docker-compose.override.yml"
   }
 
   lazy val dockerComposeTestDummyImpl: Def.Initialize[Task[Unit]] = Def.task(())
