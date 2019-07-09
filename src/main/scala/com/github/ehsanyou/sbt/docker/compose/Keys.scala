@@ -28,6 +28,8 @@ object Keys {
 
   val dockerComposeFilePath = settingKey[String]("docker-compose file path")
 
+  val dockerComposeOverridesPattern = settingKey[PathFinder]("file pattern for additional docker-compose.override.yml files.")
+
   val dockerComposeIgnore = settingKey[Boolean](
     "Ignores all provided tasks in project scope -- useful for root projects in multi-project configuration"
   )

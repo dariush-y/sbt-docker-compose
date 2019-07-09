@@ -30,6 +30,7 @@ object DockerCompose extends AutoPlugin {
   override lazy val projectSettings = Seq(
     dockerCompose := dockerComposeImpl.evaluated,
     dockerComposeFilePath := dockerComposeFilePathImpl.value,
+    dockerComposeOverridesPattern := dockerComposeOverridesPatternImpl.value,
     dockerComposeProjectName := dockerComposeProjectNameImpl.value,
     dockerComposeCommandOptions := dockerComposeCommandOptionsImpl.value,
     dockerComposeUpCommandOptions := dockerComposeUpCommandOptionsImpl.value,
@@ -48,6 +49,7 @@ object DockerCompose extends AutoPlugin {
 
     val dockerCompose = Keys.dockerCompose
     val dockerComposeFilePath = Keys.dockerComposeFilePath
+    val dockerComposeOverridesPattern = Keys.dockerComposeOverridesPattern
     val dockerComposeProjectName = Keys.dockerComposeProjectName
     val dockerComposeCommandOptions = Keys.dockerComposeCommandOptions
     val dockerComposeUpCommandOptions = Keys.dockerComposeUpCommandOptions
@@ -108,6 +110,10 @@ object DockerCompose extends AutoPlugin {
     basePath + "/docker-compose.yml"
   }
 
+  lazy val dockerComposeOverridesPatternImpl: Def.Initialize[PathFinder] = Def.setting {
+    baseDirectory.value * "docker-compose.overrides.yml"
+  }
+
   lazy val dockerComposeTestDummyImpl: Def.Initialize[Task[Unit]] = Def.task(())
 
   lazy val dockerComposeHealthCheckDeadlineImpl: Def.Initialize[FiniteDuration] = Def setting 5.minutes
@@ -129,11 +135,14 @@ object DockerCompose extends AutoPlugin {
         dockerComposeUpCommandOptions.value
       )
 
+      val composeFiles = dockerComposeFilePath.value +: dockerComposeOverridesPattern.value
+        .get.map(_.absolutePath)
+
       Await.result(
         new DockerComposeRunner(
           dockerComposeCmd
             .fallback(dockerComposeCommandOptions.value)
-            .withComposeFiles(dockerComposeFilePath.value),
+            .withComposeFiles(composeFiles: _*),
           command,
           preConfiguredCommands,
           dockerComposeProjectName.value,
